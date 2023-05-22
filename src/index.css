@@ -7,3 +7,23 @@
 html{
   font-family: 'Anuphan',sans-serif;
 }
+
+.navlink {
+  @apply block p-1
+}
+
+.navlink.active {
+  @apply text-violet-700 bg-slate-300
+}
+
+
+
+.input-field {
+  @apply w-full p-2.5 focus:border-2 focus:border-solid focus:border-[dodgerblue];
+  outline: none;
+}
+
+/* Set a style for the submit button */
+.btn {
+  @apply bg-[dodgerblue] text-[white] cursor-pointer w-full opacity-90 px-5 py-[15px] border-[none] hover:opacity-100;
+}
