@@ -1,41 +1,39 @@
-import React from "react";
+import { useEffect, useState } from "react";
+import SummaryCard from "../components/SummaryCard";
+import { getJobs, getSummary } from "../api/todoApi";
+import JobItem from "../components/JobItem";
 
 export default function Home() {
+  const [jobs, setJobs] = useState([]);
+  const [summary, setSummary] = useState({});
+
+  useEffect(() => {
+    let token = localStorage.getItem("token");
+    if (!token) return;
+    getJobs(token).then((rs) => {
+      console.log(rs.data);
+      setJobs(rs.data);
+    });
+    getSummary(token).then((rs) => {
+      // console.log(rs.data)
+      setSummary(rs.data);
+    });
+  }, []);
+
   return (
-    <div className="flex justify-around gap-2">
-      <div className="flex-1 rounded-2xl bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 p-1 shadow-xl">
-        <div className="block rounded-xl bg-white p-4 sm:p-6 lg:p-8" href="">
-          <div className="mt-16">
-            <h3 className="text-lg font-bold text-gray-900 sm:text-3xl">
-              All Jobs
-            </h3>
-
-            <p className="mt-2 text-2xl text-gray-500">20</p>
-          </div>
-        </div>
+    <>
+      <div className="flex justify-around gap-2 mt-3">
+        <SummaryCard title="All Jobs" amount={summary.all} />
+        <SummaryCard title="Ongoing Jobs" amount={summary.unDone} />
+        <SummaryCard title="Jobs Done" amount={summary.done} />
       </div>
-      <div className="flex-1 rounded-2xl bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 p-1 shadow-xl">
-        <div className="block rounded-xl bg-white p-4 sm:p-6 lg:p-8" href="">
-          <div className="mt-16">
-            <h3 className="text-lg font-bold text-gray-900 sm:text-3xl">
-              On-Going Jobs
-            </h3>
-
-            <p className="mt-2 text-2xl text-gray-500">12</p>
-          </div>
-        </div>
+      <div className="w-2/3 mx-auto mt-5">
+        {jobs.length > 0 ? (
+          jobs.map((el) => <JobItem key={el.id} job={el} />)
+        ) : (
+          <p className="text-center text-xl">No Job</p>
+        )}
       </div>
-      <div className="flex-1 rounded-2xl bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 p-1 shadow-xl">
-        <div className="block rounded-xl bg-white p-4 sm:p-6 lg:p-8" href="">
-          <div className="mt-16">
-            <h3 className="text-lg font-bold text-gray-900 sm:text-3xl">
-              job done
-            </h3>
-
-            <p className="mt-2 text-2xl text-gray-500">8</p>
-          </div>
-        </div>
-      </div>
-    </div>
+    </>
   );
 }
