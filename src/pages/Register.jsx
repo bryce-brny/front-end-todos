@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import { register } from "../api/todoApi";
 
 export default function Register() {
   const [input, setInput] = useState({
@@ -14,16 +15,16 @@ export default function Register() {
   };
 
   const hdlSubmit = (e) => {
-    const { username, password, confirmPassword } = input;
-    e.preventDefault();
+    const { username, password, confirmPassword } = input; //destructure การแกะ
+    e.preventDefault(); //ทุกครั้งที่เป็น submit form
     if (password !== confirmPassword)
       //validate
       return alert("Password not match, recheck");
-    axios
-      .post("http://localhost:8080/auth/register", {
-        username: username,
-        password: password,
-      })
+    // axios.post("http://localhost:8080/auth/register", {
+    register({
+      username: username,
+      password: password,
+    })
       .then((rs) => {
         console.log(rs);
       })
@@ -43,9 +44,9 @@ export default function Register() {
             className="w-full p-2.5 border focus:border-2"
             type="text"
             placeholder="Username"
-            name="username"
+            name="username" // [e.target.name] ผูกไป
             onChange={hdlChangeInput}
-            value={input.username}
+            value={input.username} //e.target.value ผูกกลับ ต้องคู่กัน
           />
         </div>
 
@@ -55,9 +56,9 @@ export default function Register() {
             className="w-full p-2.5 border focus:border-2"
             type="password"
             placeholder="Password"
-            name="password"
+            name="password" //  [e.target.name]
             onChange={hdlChangeInput}
-            value={input.password}
+            value={input.password} //e.target.value
           />
         </div>
         <div className="flex w-full mb-4">
@@ -66,12 +67,12 @@ export default function Register() {
             className="w-full p-2.5 border focus:border-2"
             type="password"
             placeholder="Confirm Password"
-            name="confirmPassword"
+            name="confirmPassword" //  [e.target.name]
             onChange={hdlChangeInput}
-            value={input.confirmPassword}
+            value={input.confirmPassword} //e.target.value
           />
         </div>
-        <button type="submit" className="btn">
+        <button type="submit" className="btn btn-outline w-full btn-info">
           Register
         </button>
       </form>

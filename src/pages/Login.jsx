@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import axios from "axios";
+import { login, getMe } from "../api/todoApi";
 
 export default function Login() {
   //เอา use+auth ประกบกัน
@@ -33,21 +34,28 @@ export default function Login() {
   const hdlSubmit = (e) => {
     e.preventDefault();
     // validation
-    axios
-      .post("http://localhost:8080/auth/login", input)
+    // axios.post("http://localhost:8080/auth/login", input) // input อยู่ใน body
+    login(input)
       .then((rs) => {
-        // console.log(rs.data.token)
-        return axios.get("http://localhost:8080/auth/getMe", {
-          headers: {
-            Authorization: `Bearer ${rs.data.token}`,
-          },
-        });
+        // console.log(rs.data.token);
+        localStorage.setItem("token", rs.data.token); // เก็บข้อมูลใน token (ชื่อstorage , value)
+        //return เพื่อให้ .then (บรรทัด49) ไปใช้ต่อ
+        // axios.get คือ การยิ่ง token ไป
+        return getMe();
+
+        // axios.get("http://localhost:8080/auth/getMe", {
+        //   // ยิง get ไปอีก path นะ
+        //   headers: {
+        //     //ต้องส่งผ่าน header เท่านั้นทำมัวๆไม่ได้
+        //     Authorization: `Bearer ${rs.data.token}`, // ต้องมี Bearer
+        //   },
+        // });
       })
       .then((rs) => {
         console.log(rs.data);
         setUser(rs.data);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => alert(err.response.data.error || err.message));
   };
 
   return (
