@@ -6,6 +6,7 @@ import JobItem from "../components/JobItem";
 export default function Home() {
   const [jobs, setJobs] = useState([]);
   const [summary, setSummary] = useState({});
+  const [reload, setReload] = useState(false);
 
   useEffect(() => {
     let token = localStorage.getItem("token");
@@ -18,7 +19,7 @@ export default function Home() {
       // console.log(rs.data)
       setSummary(rs.data);
     });
-  }, []);
+  }, [reload]);
 
   return (
     <>
@@ -29,7 +30,9 @@ export default function Home() {
       </div>
       <div className="w-2/3 mx-auto mt-5">
         {jobs.length > 0 ? (
-          jobs.map((el) => <JobItem key={el.id} job={el} />)
+          jobs.map((el) => (
+            <JobItem key={el.id} job={el} setReload={setReload} />
+          ))
         ) : (
           <p className="text-center text-xl">No Job</p>
         )}

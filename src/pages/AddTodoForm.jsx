@@ -1,40 +1,27 @@
-import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { getJobById, updateJob } from "../api/todoApi";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { addJob } from "../api/todoApi";
 
-export default function EditTodoForm() {
+export default function AddTodoForm() {
   const navigate = useNavigate();
-  const { id } = useParams(); // คล้าย req.param แต่เป็นฝั่ง front end
-  console.log(id);
   const [input, setInput] = useState({
     title: "",
     dueDate: "",
   });
 
-  useEffect(() => {
-    let token = localStorage.getItem("token");
-    getJobById(id, token).then((rs) => {
-      setInput(rs.data);
-    });
-  }, [id]);
-
   const hdlChangeInput = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
-  };
-
-  const hdlChangeStatus = (e) => {
-    setInput({ ...input, status: e.target.checked });
   };
 
   const hdlSubmit = (e) => {
     e.preventDefault();
     // validation
     let token = localStorage.getItem("token");
-    updateJob(id, input, token).then((rs) => {
-      navigate("/"); //********/
+    addJob(input, token).then((rs) => {
+      console.log(rs);
+      navigate("/");
     });
   };
-
   return (
     <div className="mt-5 ">
       <form className="max-w-lg mx-auto" onSubmit={hdlSubmit}>
@@ -63,20 +50,8 @@ export default function EditTodoForm() {
           />
         </div>
 
-        <div className="form-control w-40 mb-5 ">
-          <label className="cursor-pointer label">
-            <span className="label-text">Job Completed</span>
-            <input
-              type="checkbox"
-              className="toggle toggle-primary"
-              checked={input.status}
-              onChange={hdlChangeStatus}
-            />
-          </label>
-        </div>
-
         <button type="submit" className="btn">
-          Update Job
+          Add Job
         </button>
       </form>
     </div>

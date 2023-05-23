@@ -58,7 +58,8 @@ import Navbar from "../components/Navbar";
 import Header from "../components/Header";
 import { useAuth } from "../contexts/AuthContext";
 import GuestHome from "../pages/GuestHome";
-// import AddTodoForm from "../pages/AddTodoForm";
+import AddTodoForm from "../pages/AddTodoForm";
+import EditTodoForm from "../pages/EditTodoForm";
 
 export default function Router() {
   const { user } = useAuth();
@@ -85,6 +86,14 @@ export default function Router() {
         {
           path: "register",
           element: user ? <Navigate to="/" /> : <Register />,
+        },
+        {
+          path: "addtodo",
+          element: user ? <AddTodoForm /> : <Navigate to="/" />,
+        },
+        {
+          path: "updatetodo/:id",
+          element: user ? <EditTodoForm /> : <Navigate to="/" />,
         },
       ],
     },
